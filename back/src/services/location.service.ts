@@ -5,8 +5,6 @@ import Location from "../models/location";
 async function createLocation(req: Request, res: Response) {
     try {
         const { longitude, latitude } = req.body;
-        console.log({ latitude, longitude });
-
         const newLocation = new Location({ longitude, latitude });
         const location = await newLocation.save();
 

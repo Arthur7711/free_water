@@ -1,15 +1,16 @@
+import { error } from "console";
 import { Request, Response, NextFunction } from "express";
+import { errorMessages } from "../constants/errorMessages";
 
 export default function (
     req: Request,
     res: Response,
     next: NextFunction
 ): void {
-    console.log(req.header("Authorization"));
-
-    try {
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+    if (token === process.env.TOKEN) {
         next();
-    } catch (err) {
-        res.status(401).json({ msg: "Token is not valid" });
+    } else {
+        res.status(401).json({ message: errorMessages.invalidToken });
     }
 }
