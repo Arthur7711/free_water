@@ -8,7 +8,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./data/dev/mongo:/data/db
+      - mongo_data:/data/db
     networks:
       - dev-network
 
@@ -27,3 +27,6 @@ services:
 networks:
   dev-network:
     driver: bridge
+
+volumes:
+  mongo_data:
