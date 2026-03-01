@@ -1,6 +1,7 @@
-import React, { useRef } from "react";
-import { StyleSheet } from "react-native";
+import React, { useRef, useState } from "react";
+import { StyleSheet, View, ActivityIndicator, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+
 
 export function Chart() {
   const locations = [
@@ -17,7 +18,9 @@ export function Chart() {
   ];
 
   const mapRef = useRef<MapView | null>(null);
-  //  after the map is ready make zoom to Yerevan coordinates
+  const [isMapReady, setIsMapReady] = useState(false);
+
+  // after the map is ready make zoom to Yerevan coordinates
   const handleMapReady = () => {
     if (!mapRef.current || locations.length === 0) return;
 
@@ -31,31 +34,71 @@ export function Chart() {
         animated: true,
       },
     );
+
+    setIsMapReady(true);
   };
 
   return (
-    <MapView
-      ref={mapRef}
-      style={styles.map}
-      initialRegion={{
-        latitude: 40.1792,
-        longitude: 44.4991,
-        latitudeDelta: 5,
-        longitudeDelta: 5,
-      }}
-      zoomEnabled
-      onMapReady={handleMapReady}
-    >
-      {locations.map((loc) => (
-        <Marker
-          key={loc.id}
-          coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
-          title={loc.title}
-        />
-      ))}
-    </MapView>
+    <View style={styles.container}>
+      <MapView
+        ref={mapRef}
+        style={styles.map}
+        initialRegion={{
+          latitude: 40.1792,
+          longitude: 44.4991,
+          latitudeDelta: 5,
+          longitudeDelta: 5,
+        }}
+        zoomEnabled
+        onMapReady={handleMapReady}
+      >
+        {locations.map((loc) => (
+          <Marker
+            key={loc.id}
+            coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
+            title={loc.title}
+            // icon={WaterIcon}
+          />
+        ))}
+      </MapView>
+
+      {!isMapReady && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#1E90FF" />
+          <Text style={styles.loadingText}>
+            Finding best view for water points...
+          </Text>
+        </View>
+      )}
+    </View>
   );
 }
 const styles = StyleSheet.create({
-  map: { width: "100%", height: "100%" },
+  container: {
+    flex: 1,
+    backgroundColor: "#f4f7fb",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  map: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 16,
+  },
+  loadingOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.85)",
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#1E293B",
+  },
 });
