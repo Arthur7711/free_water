@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { StyleSheet, View, ActivityIndicator, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-
+import WaterIcon from "../assets/water.svg";
 
 export function Chart() {
   const locations = [
@@ -57,8 +57,21 @@ export function Chart() {
             key={loc.id}
             coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
             title={loc.title}
-            // icon={WaterIcon}
-          />
+            // icon={WaterIcon as unknown as number | ImageURISource}
+          >
+            <View
+              style={{
+                width: 40,
+                height: 40,
+                // backgroundColor: "red",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingBottom: 20,
+              }}
+            >
+              <WaterIcon height={20} />
+            </View>
+          </Marker>
         ))}
       </MapView>
 
